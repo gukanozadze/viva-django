@@ -1,0 +1,38 @@
+
+{% extends "blog/base.html" %}
+
+{% block content %}
+    <style>
+        table {
+        width: 100%;
+        }
+
+        th {
+        height: 50px;
+        }
+
+        #right_nav_bar{
+            display: none
+        }
+    </style>
+<h1>Files</h1>
+<table>
+    <tr>
+      <th>File</th>
+      <th>Date</th>
+      <th>Category</th>
+      <th>Author</th>
+    </tr>
+  
+    {% for post in posts %}
+        {% if post.file_field %}
+        <tr>
+            <td><a href="{{ post.file_field.url }}">{{post.file_field}}</a></p></td>
+            <td><small>{{ post.date_posted|date:"G:i, F d" }}</small></td>
+            <td><span>{{ post.category }}</span></td>
+            <td><span class="text-muted">{{post.author}}</p></span></td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+</table>
+{% endblock %}
