@@ -149,3 +149,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler", "django_excel.TemporaryExcelFileUploadHandler")
 
+try:
+    from .pc_settings import *
+except ImportError:
+    pass
