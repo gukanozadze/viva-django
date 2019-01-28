@@ -44,7 +44,6 @@ class FilesListView(ListView):
     ordering = ['-date_posted']
 
 
-
 #  Posts of users
 class UserPostListView(ListView):
     model = Post
