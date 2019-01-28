@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -11,7 +11,25 @@ from django.views.generic import (
     DeleteView
 )
 from .models import Post
+from .forms import PostCreateForm
 
+def PostBlog(request):
+    if request.method == 'POST':
+        print("POST")
+        postcreateform = PostCreateForm(request.POST, request.FILES)
+        postcreateform.author = request.user
+
+        if postcreateform.is_valid():
+            user = request.user
+            postcreateform.author = user
+            postcreateform.save()
+            return redirect('blog-home')
+        else:
+            print(postcreateform.errors)
+    else:
+        postcreateform = PostCreateForm()
+
+    return render(request, 'blog/post_form.html', {"form":postcreateform})
 
 #  Category Posts
 class PostListView(ListView):
@@ -26,6 +44,9 @@ class PostListView(ListView):
         context = Post.objects.filter(Q(category=get_category) | Q(category='all')).order_by('-date_posted')
         return context
 
+
+def home(request):
+    return render(request, 'blog/home.html')
 
 # All Posts
 class AllPostListView(ListView):
