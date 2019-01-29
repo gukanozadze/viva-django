@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.core.mail import send_mail
+from django.views.generic.edit import FormView
 from django.views.generic import (
     ListView,
     DetailView,
@@ -12,24 +13,8 @@ from django.views.generic import (
 )
 from .models import Post
 from .forms import PostCreateForm
+from django import forms
 
-def PostBlog(request):
-    if request.method == 'POST':
-        print("POST")
-        postcreateform = PostCreateForm(request.POST, request.FILES)
-        postcreateform.author = request.user
-
-        if postcreateform.is_valid():
-            user = request.user
-            postcreateform.author = user
-            postcreateform.save()
-            return redirect('blog-home')
-        else:
-            print(postcreateform.errors)
-    else:
-        postcreateform = PostCreateForm()
-
-    return render(request, 'blog/post_form.html', {"form":postcreateform})
 
 #  Category Posts
 class PostListView(ListView):
@@ -44,9 +29,6 @@ class PostListView(ListView):
         context = Post.objects.filter(Q(category=get_category) | Q(category='all')).order_by('-date_posted')
         return context
 
-
-def home(request):
-    return render(request, 'blog/home.html')
 
 # All Posts
 class AllPostListView(ListView):
@@ -84,14 +66,35 @@ class PostDetailView(DetailView):
 
 
 #  Creating Post
-class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
-    fields = ['title', 'content', 'category', 'file_field']
+# class PostCreateView(LoginRequiredMixin, CreateView):
+#     model = Post
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
+#     fields = ['title', 'content', 'category', 'files']
+
+#     def form_valid(self, form):
+#         form.instance.author = self.request.user
         
-        return super().form_valid(form)
+#         return super().form_valid(form)
+
+#     def form_invalid(self, form):
+#         return self.render_to_response(self.get_context_data(form=form))
+
+def CreatePost(request):
+    if request.method == "POST":
+        form = PostCreateForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        else:
+
+            for field in form: 
+                for error in field.errors: 
+                    print(error)
+
+    else:
+        form = PostCreateForm()
+    return render(request, 'blog/post_form.html', {'form': form})
 
 
 #  Updating View
@@ -122,4 +125,4 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 def files(request):
-    return render(request, 'blog/files.html', {'title': 'About'})
+    return render(request, 'blog/files.html', {'title': 'Files'})

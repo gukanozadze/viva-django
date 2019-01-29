@@ -6,20 +6,21 @@ from django import forms
 from django.conf import settings
 
 class Post(models.Model):
-    CATEGORY_CHOICES = (
-        ('all', 'all'),
-        ('drone', 'drone'),
-        ('management', 'management'),
-        ('sos', 'sos')
+    CATEGORY_CHOICES = (('all', 'all'),
+                        ('drone', 'Drone'),
+                        ('management', 'Management'),
+                        ('SOS', 'SOS'))
 
-    )
 
     title = models.CharField(max_length=100)
     content = models.TextField()
-    category = models.CharField(default='all', max_length=100)
-    author =  models.ForeignKey(settings.AUTH_USER_MODEL,  null=True, on_delete=models.CASCADE)
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES)
+    files = models.FileField(upload_to='documents', null=True)
+
+    author =  models.ForeignKey(User, default=None, null=True, blank=True, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
 
+   
     def __str__(self):
         return self.title
 

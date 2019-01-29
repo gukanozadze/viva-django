@@ -25,9 +25,9 @@
     </tr>
   
     {% for post in posts %}
-        {% if post.file_field %}
+        {% if post.files %}
         <tr>
-            <td><a href="{{ post.file_field.url }}">{{post.file_field}}</a></p></td>
+            <td><a href="{{ post.files.url }}">{{post.files}}</a></p></td>
             <td><small>{{ post.date_posted|date:"G:i, F d" }}</small></td>
             <td><span>{{ post.category }}</span></td>
             <td><span class="text-muted">{{post.author}}</p></span></td>
