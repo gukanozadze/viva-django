@@ -15,6 +15,21 @@ from .models import Post
 from .forms import PostCreateForm
 from django import forms
 
+# Creating Post
+def CreatePost(request):
+    if request.method == "POST":
+        form = PostCreateForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.author = request.user       
+
+            form.save()
+            return redirect('blog-home')
+    else:
+        form = PostCreateForm()
+    return render(request, 'blog/post_form.html', {'form': form})
+
 
 #  Category Posts
 class PostListView(ListView):
@@ -64,37 +79,6 @@ class UserPostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
 
-
-#  Creating Post
-# class PostCreateView(LoginRequiredMixin, CreateView):
-#     model = Post
-
-#     fields = ['title', 'content', 'category', 'files']
-
-#     def form_valid(self, form):
-#         form.instance.author = self.request.user
-        
-#         return super().form_valid(form)
-
-#     def form_invalid(self, form):
-#         return self.render_to_response(self.get_context_data(form=form))
-
-def CreatePost(request):
-    if request.method == "POST":
-        form = PostCreateForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-        else:
-
-            for field in form: 
-                for error in field.errors: 
-                    print(error)
-
-    else:
-        form = PostCreateForm()
-    return render(request, 'blog/post_form.html', {'form': form})
 
 
 #  Updating View

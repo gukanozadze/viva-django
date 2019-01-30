@@ -15,9 +15,9 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     category = models.CharField(max_length=30, choices=CATEGORY_CHOICES)
-    files = models.FileField(upload_to='documents', null=True)
+    files = models.FileField(upload_to='documents')
 
-    author =  models.ForeignKey(User, default=None, null=True, blank=True, on_delete=models.CASCADE)
+    author =  models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
 
    
