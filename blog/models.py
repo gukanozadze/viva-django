@@ -12,17 +12,16 @@ class Post(models.Model):
                         ('SOS', 'SOS'))
 
 
-    title = models.CharField(max_length=100)
     content = models.TextField()
     category = models.CharField(max_length=30, choices=CATEGORY_CHOICES)
-    files = models.FileField(upload_to='documents')
+    files = models.FileField(upload_to='documents', null=True, blank=True)
 
     author =  models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
 
    
     def __str__(self):
-        return self.title
+        return self.content[:10]
 
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'pk': self.pk})
