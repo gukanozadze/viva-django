@@ -54,14 +54,24 @@ class AllPostListView(ListView):
     paginate_by = 10
 
 
+
+
 # Files All Posts
-class FilesListView(ListView):
-    model = Post
-    template_name = 'blog/files.html'  # <app>/<model>_<viewtype>.html
-    context_object_name = 'posts'
-    ordering = ['-date_posted']
+def FilesListView(request):
+    posts = Post.objects.all()
+    users = User.objects.all()
+    context = {'users': users, 'posts': posts}
+
+    return render(request, 'blog/files.html', context)
 
 
+# User Files Posts
+def UserFilesListView(request, username):
+    posts = Post.objects.filter(author=username)
+    users = User.objects.all()
+    context = {'users': users, 'posts': posts}
+
+    return render(request, 'blog/files.html', context)
 
 #  Posts of users
 class UserPostListView(ListView):

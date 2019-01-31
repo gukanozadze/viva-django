@@ -8,6 +8,7 @@ from .views import (
     PostDeleteView,
     UserPostListView,
     FilesListView,
+    UserFilesListView,
     CreatePost
 )
 from . import views
@@ -19,6 +20,8 @@ urlpatterns = [
     path("post/new/", CreatePost, name="post-create"),
     path("post/<int:pk>/update/", PostUpdateView.as_view(), name="post-update"),
     path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post-delete"),
-    path("files/", FilesListView.as_view(), name="blog-files"),
+    path("files/", FilesListView, name="blog-files"),
+    path("files/<int:username>", UserFilesListView, name="user-files"),
+    
     path("post/<str:category>/", PostListView.as_view(), name="blog-category"),
 ]

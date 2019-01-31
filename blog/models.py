@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django import forms
 from django.conf import settings
+import os
 
 class Post(models.Model):
     CATEGORY_CHOICES = (('all', 'all'),
@@ -14,12 +15,14 @@ class Post(models.Model):
 
     content = models.TextField()
     category = models.CharField(max_length=30, choices=CATEGORY_CHOICES)
-    files = models.FileField(upload_to='documents', null=True, blank=True)
+    files = models.FileField(upload_to='documents/%Y/%m/%d/', null=True, blank=True)
 
     author =  models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
 
-   
+    def filename(self):
+        return os.path.basename(self.files.name)
+
     def __str__(self):
         return self.content[:10]
 

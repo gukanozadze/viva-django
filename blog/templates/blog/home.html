@@ -9,12 +9,14 @@
               
               <small class="text-muted">{{ post.date_posted|date:"G:i, F d, Y" }}</small>
               <span class="text-muted">| {{ post.category }}</span>
+            </div>  
+            <div>
+              <p class="article-content">{{ post.content }}</p>
+              {% if post.files %}
+                <a href="{{ post.files.url }}">{{post.files}}</a>
+            
+              {% endif %}
             </div>
-            <p class="article-content">{{ post.content }}</p>
-            {% if post.files %}
-              <a href="{{ post.files.url }}">{{post.files}}</a>
-           
-            {% endif %}
           </div>
         </article>
     {% endfor %}
