@@ -13,17 +13,14 @@
             <div>
               <p class="article-content">{{ post.content }}</p>
               {% if post.files %}
-                <a href="{{ post.files.url }}">{{post.files}}</a>
-            
+                <a href="{{ post.files.url }}">{{post.filename}}</a>
+
               {% endif %}
             </div>
           </div>
         </article>
     {% endfor %}
 
-
-
-    
     {% if is_paginated %}
 
       {% if page_obj.has_previous %}
