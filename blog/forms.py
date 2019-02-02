@@ -1,9 +1,9 @@
 from django import forms
 from .models import Post
+from django.utils import timezone
 
-from .models import Post
+class PostCreateForm(forms.ModelForm, forms.Form):
 
-class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('file_field', )
+        fields = ('content', 'category', 'files')

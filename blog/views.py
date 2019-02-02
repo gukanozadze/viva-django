@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.core.mail import send_mail
+from django.views.generic.edit import FormView
 from django.views.generic import (
     ListView,
     DetailView,
@@ -11,6 +12,23 @@ from django.views.generic import (
     DeleteView
 )
 from .models import Post
+from .forms import PostCreateForm
+from django import forms
+
+# Creating Post
+def CreatePost(request):
+    if request.method == "POST":
+        form = PostCreateForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.author = request.user       
+
+            form.save()
+            return redirect('blog-home')
+    else:
+        form = PostCreateForm()
+    return render(request, 'blog/post_form.html', {'form': form})
 
 
 #  Category Posts
@@ -36,14 +54,28 @@ class AllPostListView(ListView):
     paginate_by = 10
 
 
+
+
 # Files All Posts
-class FilesListView(ListView):
-    model = Post
-    template_name = 'blog/files.html'  # <app>/<model>_<viewtype>.html
-    context_object_name = 'posts'
-    ordering = ['-date_posted']
+def FilesListView(request):
+    posts = Post.objects.all()
+    users = User.objects.all()
+    context = {'users': users, 'posts': posts}
+
+    return render(request, 'blog/files.html', context)
 
 
+<<<<<<< HEAD
+=======
+# User Files Posts
+def UserFilesListView(request, username):
+    posts = Post.objects.filter(author=username)
+    users = User.objects.all()
+    context = {'users': users, 'posts': posts}
+
+    return render(request, 'blog/files.html', context)
+
+>>>>>>> 1fb910eb7d74e7f3bc2e5e0b3acb92903188a3a6
 #  Posts of users
 class UserPostListView(ListView):
     model = Post
@@ -60,16 +92,6 @@ class UserPostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
 
-
-#  Creating Post
-class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
-    fields = ['title', 'content', 'category', 'file_field']
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        
-        return super().form_valid(form)
 
 
 #  Updating View
@@ -100,4 +122,4 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 def files(request):
-    return render(request, 'blog/files.html', {'title': 'About'})
+    return render(request, 'blog/files.html', {'title': 'Files'})

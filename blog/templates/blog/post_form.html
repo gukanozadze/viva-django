@@ -2,17 +2,22 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
+
+            <fieldset class="form-group">   
+
                 <legend class="border-bottom mb-4">Blog Post</legend>
+<<<<<<< HEAD
                 {{ form|crispy }}
 
                 
+=======
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input type="submit" name="submit" value="post" class="btn btn-outline-info">
+                </form>
+>>>>>>> 1fb910eb7d74e7f3bc2e5e0b3acb92903188a3a6
             </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Post</button>
-            </div>
-        </form>
+
     </div>
 {% endblock content %}
